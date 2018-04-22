@@ -22,20 +22,12 @@ pipeline {
       steps {
         sh 'box testbox run runner="http://localhost:8080/tests/runner.cfm" reporter="JUnit" directory="tests.bundles" outputFile="./junitResults.xml"'
         echo 'Running Unit Tests'
+        junit './junitResults.xml'
       }
     }
     stage('Deploy') {
-      parallel {
-        stage('Deploy') {
-          steps {
-            echo 'Deploying'
-          }
-        }
-        stage('Archive Tests') {
-          steps {
-            junit(testResults: './junitResults.xml', allowEmptyResults: true)
-          }
-        }
+      steps {
+        echo 'Deploying'
       }
     }
   }
