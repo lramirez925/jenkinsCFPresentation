@@ -7,7 +7,7 @@ pipeline {
 
   }
   stages {
-    stage('error') {
+    stage('Build') {
       steps {
         echo 'In Build Script. '
         sh 'ls'
@@ -16,6 +16,17 @@ pipeline {
         sh 'box cfconfig import testConfig.json'
         sh 'box install'
         sh 'box server restart'
+      }
+    }
+    stage('Unit Tests') {
+      steps {
+        sh 'box testbox run runner="http://localhost:8080/tests/index.cfm" reporter="JUnit" directory="tests.specs" outputFile="./junitResults.xml"'
+        echo 'Running Unit Tests'
+      }
+    }
+    stage('Deploy') {
+      steps {
+        echo 'Deploying'
       }
     }
   }
