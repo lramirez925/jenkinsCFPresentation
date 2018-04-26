@@ -2,7 +2,8 @@ pipeline {
   agent {
     docker {
       image 'ortussolutions/commandbox'
-      args '-u=root'
+      args '''-u=root
+-v commandBoxArtifacts:/root/.CommandBox/artifacts'''
     }
 
   }
