@@ -1,0 +1,17 @@
+{
+    "rule" : [ ],
+    "excludes" : [ {
+        "code" : "FUNCTION_HINT_MISSING"
+    },{
+        "code" :"STRUCT_ARRAY_NOTATION"
+    },{
+        "code" :"FUNCTION_TYPE_MISSING"
+    },{
+        "code" :"COMPONENT_IS_TEMPORARY"
+    },{
+        "code" :"ARG_HINT_MISSING_SCRIPT"        
+    }],
+    "includes" : [  ],
+    "inheritParent" : false,
+    "parameters" : {}
+}

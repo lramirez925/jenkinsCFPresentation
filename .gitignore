@@ -1,1 +1,3 @@
 /testbox/
+cflint-results.*
+junitResults.xml
