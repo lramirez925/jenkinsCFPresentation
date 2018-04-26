@@ -10,7 +10,7 @@ pipeline {
     stage('Build') {
       steps {
         echo 'In Build Script. '
-        sh 'box install commandbox-cflint'
+        sh 'box install commandbox-cflint'
         sh 'box server start port=8080'
         sh 'box cfconfig import myConfig.json'
         sh 'box cfconfig import testConfig.json'
@@ -30,7 +30,7 @@ pipeline {
         }
         stage('runCFLint') {
           steps {
-            sh 'cflint exitOnError=false --html pattern="**/src/**|**/tests/"'
+            sh 'box cflint exitOnError=false --html pattern="**/src/**|**/tests/"'
             archiveArtifacts 'cflint-results.html'
           }
         }
