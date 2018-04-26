@@ -30,7 +30,11 @@ pipeline {
         }
         stage('runCFLint') {
           steps {
-            sh 'box cflint exitOnError=false --html pattern="**/src/**|**/tests/"'
+            sh 'box cflint exitOnError=false --html pattern="src/**.*|tests/**.*"'
+            script {
+              def jsonError = readJSON file: 'cflint-results.json'
+              assert jsonError['errorExists'] == false
+            }
             archiveArtifacts 'cflint-results.html'
           }
         }
