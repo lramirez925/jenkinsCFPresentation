@@ -1,0 +1,310 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title></title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/custom.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-markdown>
+					<textarea data-template>
+						## Clean Code, Jenkins, and Test Box
+						### By Lonnie Ramirez
+					</textarea>
+				</section>
+				<section>
+						<blockquote class="citation">
+							Code, without tests, is not clean. No matter how elegant it is, no matter how readable and accessible, if it hath not tests, it be unclean. 
+							<footer class="citation">--Robert C. Martin, Clean Code: A Handbook of Agile Software Craftsmanship</footer>
+						</blockquote>	
+				</section>
+				<section >
+					<h2>What we will cover</h2>
+					<section data-markdown>
+						<textarea data-template>
+							- Some clean code concepts that help you test
+								1. Abstract Complexity
+								1. General Rules
+								1. Conventions
+								1. Avoid flag arguments
+								1. Comments
+								1. Source Code
+						</textarea>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							- Jenkins
+								1. What is it
+								2. Pipeline File
+								3. Results
+						</textarea>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							- Test Box
+								1. Writing xUnit Tests
+								2. Writing BDD Tests
+								3. Run your Test
+								4. Automate your Tests
+								
+						</textarea>
+					</section>	
+				</section>
+				<section >
+					<h2>Complexity</h2>
+					<section data-markdown>
+						- Why is complexity bad. 
+							1. Takes time to understand. 
+							2. Makes you question why something was done. 
+						- Is there complexity?
+							1. Do you need to read more than 10 lines to understand what is is doing? 
+							2. Do you need to reformat the code or run the code to see the values?
+					</section>
+					<section data-markdown>
+						- Ways to solve
+							1. Simplify the code.
+								- Better variable names
+								- May not be possible 
+							2. Comment the code. 
+								- Makes the code more verbose, but may not solve the issue completely
+								- Still takes time to understand. 
+							3. Abstract the complexity
+								- Allows person to understand what is happening without having to read the code (Assuming function name is understandable).
+								- Generalizes the code 
+					</section>
+				</section>
+				<section>
+					<h2>General Rules</h2>
+					<section data-markdown>
+						<textarea data-template>
+							- Code is meant to be written once but used many times. 
+								1. Code is consumed more than it is written.  
+								2. Make the api easy to be consumed vs simple to write.
+									- Try not to force clients to do major conversions of values before passing to the function. 
+										- Do simple calculations if you can for the client. 
+								3. KISS - Keep It Simple Stupid
+						</textarea>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							- Editing older code 
+								1. If you spend time trying to understanding something fix it. 
+								1. Add comments or abstract the code to make it self documenting   
+								1. Always leave code better than you found it
+								1. Only fix code you edit. 
+									- When reformatting whole files try to do multiple commits. 
+									- When formatting manually only format the function you are in. 
+						</textarea>
+					</section>	
+				</section>
+				<section>
+					<h2>Conventions</h2>
+					<section data-markdown>
+						<textarea data-template>
+							- Use desctiptive names
+							- Limit argument count. 
+								- For large number of options look at optional struct. 
+									- Must be well documented
+							- Functions should not have side affects. (At least limit side affects)
+								- Return new object vs updating existing. 
+							- See Conventions Brown Bag by Lee
+						</textarea>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							- Comments
+								1. Code should not require comments. (Self Documenting)
+								1. If it is complex then comments could be required.   
+								1. Comments should state the intent of the code not how it works 
+								1. Comments should state any side effects
+								1. Functions should have comments at beginning
+									- Try to use docbox or colddoc to auto generate documentation
+						</textarea>
+					</section>
+					
+				</section>
+				<section>
+					<h2>Source Code</h2>
+					<section data-markdown>
+						<textarea data-template>
+							- Organize functions close to those that are used. 
+							- Don't just append functions to the bottom.
+							- Declare local variables close to where they are used. (Don't put all variables at top of function when they are used at bottom)
+							- Maintain block scoping even if Coldfusion doesn't
+							- Use folders to seperate concerns. 
+							- Functions 
+								- Functions should not exceed a page.
+								- Most suggest 10-20 lines max (Allows top comments to be on same page)
+						</textarea>
+					</section>
+				</section>
+				<section>
+					<h2>Jenkins</h2>
+					<blockquote>
+						Jenkins is an open source automation server written in Java. Jenkins helps to automate the non-human part of software development process, with continuous integration and facilitating technical aspects of continuous delivery.
+						<footer class="citation">--Wikipedia</footer>							
+					</blockquote>
+				</section>
+				<section>
+						<h2>Jenkins Pipeline File</h2>
+						<section data-markdown>
+							<textarea data-template>
+								- File name is JenkinsFile though can be changed.
+								- Can be written in Declarative  or Scripted, both are forms of groovy
+									- Declaritive is easier and stricter
+									- Scripted is more flexible and powerful
+							</textarea>
+						</section>
+						<section >
+							<pre class="smallerCode">
+								<code class="hljs" data-trim contenteditable >
+									pipeline { // Top level required.
+										agent { // Specifies where the the pipeline will execute.
+											docker { // Execute the pipeline within a docker image
+												image 'ortussolutions/commandbox'  // Image for docker 
+											}
+										}
+									
+										stages { // Bulk of the work happens here. Is made up of multiple stage children. Does them in order
+											stage('Build') {//Different steps in the stages section
+												steps { //Here is the actions that occur in the stage
+													echo 'Building..' //simply output the string
+													sh 'ls'	// Perform command line actions.
+													sh 'box install commandbox-cfconfig'
+													sh 'box server start port=8080'
+													sh 'box cfconfig import myConfig.json'
+													sh 'box cfconfig import testConfig.json'
+													sh 'box install'
+													sh 'box server restart'
+									
+												}
+											}
+											stage('Test') { //Testing stage. This does not run if previous stages have failed.
+												steps {
+													echo 'Testing..'
+													sh 'box testbox run runner="http://localhost:8080/tests/runner.cfm" reporter="JUnit" directory="tests.specs" outputFile="./junitResults.xml"'
+												}
+											}
+											stage('Deploy') { //Currently empty but we could put some deployment logic here.
+												steps {
+													echo 'Deploying....'
+												}
+											}
+										}
+										post { // This always occurs even if something failed. 
+											always {
+												archive "src/**/*"
+												junit 'junitResults.xml'
+											}
+										}
+									}
+								</code>
+							</pre>
+						</section>
+	
+						
+					</section>
+
+					<section>
+							<h2>Test Box</h2>
+							<section data-markdown>
+								<textarea data-template>
+									- Commands you should know. 
+										1. install testbox
+											- This installs testbox to your app adding the entry to the box.json
+										1. testbox run 
+											- Runs the default url set in the box.json
+										1. testbox watch 
+											- Watches a folder and on change runs the test. 
+								</textarea>
+							</section>
+							<section >
+									<pre class="smallerCode">
+										<code  class="hljs" data-trim contenteditable>
+												component extends='testbox.system.compat.framework.TestCase' {
+													
+														/**
+														* Runs once before ALL tests by MXUnit.
+														*/
+														public void function beforeTests() {
+														}
+													
+														/**
+														* Runs once before each test
+														*/
+														public void function setup() {
+													
+														}
+													
+														public void function testSomething() {
+															try {
+																var instance = new someThing();
+															} catch(any err) {
+																rethrow;
+															}
+															AssertEquals(
+																true,
+																isDefined("instance")
+															);
+														}
+													
+														public void function someOtherTest() {
+															try {
+																var instance = new someThing();
+																var testValue = instance.returnBooleanTrue()
+															} catch(any err) {
+																AssertEquals(true,false,"#e.message#")
+															}
+															AssertEquals(
+																true,
+																testValue
+															);
+														}
+													
+													}
+										</code>
+
+									</pre>
+							</section>
+							
+						</section>
+			</div><!-- End of slides -->
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>

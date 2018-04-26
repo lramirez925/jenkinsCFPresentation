@@ -1,0 +1,11 @@
+blockquote footer.citation {
+    font-size: .5em;
+}
+
+ .reveal blockquote {
+    font-style: inherit;
+}
+
+pre.smallerCode {
+    font-size: .3em;
+}
