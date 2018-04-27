@@ -11,14 +11,20 @@
 
 ## To run these examples 
 1. Fork this repo. 
-2. Install as above
-3. Go into Jenkins
-4. Click the blueocean link 
-5. Click New Pipeline
-6. Choose yoour repository type.... aka github
-7. Choose your organization if asked. 
-8. Choose your repository... aka the forked repo
-9. Click Create Pipeline
+1. Install as above
+1. Go into Jenkins
+1. Install a plugin. 
+    1. In Jenkins click Manager Jenkins
+    1. Click Manage Plugins
+    1. Click Available tab
+    1. Search for Pipeline Utility Steps
+    1. Install the plugin.
+1. Click the blueocean link 
+1. Click New Pipeline
+1. Choose your repository type.... aka github
+1. Choose your organization if asked. 
+1. Choose your repository... aka the forked repo
+1. Click Create Pipeline
 
 
 ## How to use this repository
