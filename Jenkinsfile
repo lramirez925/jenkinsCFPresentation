@@ -34,7 +34,7 @@ pipeline {
   }
   post { // This always occurs even if something failed. 
     always {
-      archiveArtifacts "src/"
+      zip zipFile: 'src.zip', archive: true, dir: 'src'
     }
   }
 }
