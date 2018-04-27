@@ -46,6 +46,7 @@
 							<p data-markdown>
 								### Who Am I 
 								* From Johnstown, PA (Yes we flooded ourselves 3 times).
+								* Graduated from UPJ and currently attending Syracuse University's Online Masters Program
 								* Avid adventurer into Scifi and Anime conventions. 
 								* I constantly break everything so I am always looking for new ways to find where I broke it. 
 								* Twitter: epicureannerd
@@ -56,6 +57,34 @@
 						
 					
 				</section>
+				<section data-markdown>
+					<textarea data-template >
+						### Some useful commands
+							1. install testbox
+								- This installs testbox to your app adding the entry to the box.json
+							1. cfconfig import
+								- Installs your config.... depending on your docker setup may not be needed
+							1. server start port=8080
+								- runs your server using default server.json and uses this port. 
+							
+					</textarea>
+				</section>
+					<section data-markdown>
+						<textarea data-template>
+							### Some useful commands
+							1. testbox run 
+								- Runs the default url set in the box.json
+								- parameters
+									- runner="http://localhost:8080/tests/runner.cfm" 
+										- The url to your runner. This is why we set the port ourselves. 
+									- reporter="JUnit" 
+										- Reporter type. Using JUnit because jenkins can use it by default
+									- directory="tests.bundles" 
+										- Directory where your rests are. 
+									- outputFile="./junitResults.xml"'
+										- File to output the test results to be archived. 
+						</textarea>
+					</section>
 				<section>
 					<img data-src="img/destroy.jpg" class="stretch">
 				</section>
@@ -67,6 +96,25 @@
 					</blockquote>
 				</section>
 				<section>
+					<h2>Jenkins</h2>
+					<blockquote>
+						<pre class="smallerCode">
+							<code class="hljs" data-trim contenteditable >
+									docker run \
+										-u root \
+										--rm \
+										-d \
+										-p 8080:8080 \
+										-p 50000:50000 \
+										-v jenkins-data:/var/jenkins_home \
+										-v /var/run/docker.sock:/var/run/docker.sock \
+										jenkinsci/blueocean
+							</code>
+						</pre>
+						<footer class="citation">--https://jenkins.io/doc/book/installing/</footer>							
+					</blockquote>
+				</section>
+				<section>
 					<h2>Jenkins Pipeline File</h2>
 					<section data-markdown>
 						<textarea data-template>
@@ -74,6 +122,8 @@
 							- Can be written in Declarative  or Scripted, both are forms of groovy
 								- Declaritive is easier and stricter
 								- Scripted is more flexible and powerful
+							- If you can run via command line then you can run it in jenkins. 
+								- If you can't run via commandline get CommandBox 
 						</textarea>
 					</section>
 				</section>
@@ -87,7 +137,6 @@
 									image 'ortussolutions/commandbox' // Image for docker 
 									args '-u=root'
 								}
-							
 							}
 							stages { // Bulk of the work happens here. Is made up of multiple stage children. Does them in order
 								stage('Build') { //Different steps in the stages section
@@ -124,23 +173,100 @@
 						</code>
 					</pre>
 				</section>
-	
-						
-
-				<section data-markdown>
-					<h2>Test Box</h2>
-					<textarea data-template>
-						- Commands you should know. 
-							1. install testbox
-								- This installs testbox to your app adding the entry to the box.json
-							1. testbox run 
-								- Runs the default url set in the box.json
-							1. testbox watch 
-								- Watches a folder and on change runs the test. 
-					</textarea>
+				<section >
+					<h2>CFLint Example code.</h2>
+					<pre class="smallerCode">
+						<code class="hljs" data-trim contenteditable >
+							pipeline {
+								agent {
+									docker {
+									image 'ortussolutions/commandbox'
+									args '-u=root'
+									}
+								
+								}
+								stages {
+									stage('Build') {
+										steps {
+											echo 'In Build Script. '
+											sh 'box install commandbox-cflint'
+											sh 'box server start port=8080'
+											sh 'box cfconfig import myConfig.json'
+											sh 'box cfconfig import testConfig.json'
+											sh 'box install'
+											sh 'box server restart'
+										}
+									}
+									stage('Unit Tests') {
+										parallel {
+											stage('Unit Tests') {
+												steps {
+													echo 'Running Unit Tests'
+													sh 'box testbox run runner="http://localhost:8080/tests/runner.cfm" reporter="JUnit" directory="tests.bundles" outputFile="./junitResults.xml"'
+													sh 'ls'
+													junit 'junitResults.xml'
+												}
+											}
+											stage('runCFLint') {
+												steps {
+													sh 'box cflint exitOnError=false --html pattern="**/src/**|**/tests/"'
+													archiveArtifacts 'cflint-results.html'
+												}
+											}
+										}
+									}
+									stage('Deploy') {
+										steps {
+											echo 'Deploying'
+										}
+									}
+								}
+							}
+						</code>
+					</pre>
 				</section>
-
-							
+				<section>
+					<h2>Cache Artifacts Example code.</h2>
+					<pre class="smallerCode">
+						<code class="hljs" data-trim contenteditable >
+							pipeline {
+								agent {
+									docker {
+										image 'ortussolutions/commandbox'
+										args '''-u=root -v commandBoxArtifacts:/root/.CommandBox/artifacts'''
+									}
+								
+								}
+								stages {
+									stage('Build') {
+										steps {
+											echo 'In Build Script. '
+											sh 'ls'
+											sh 'box server start port=8080'
+											sh 'box cfconfig import myConfig.json'
+											sh 'box cfconfig import testConfig.json'
+											sh 'box install'
+											sh 'box server restart'
+										}
+									}
+									stage('Unit Tests') {
+										steps {
+											echo 'Running Unit Tests'
+											sh 'box testbox run runner="http://localhost:8080/tests/runner.cfm" reporter="JUnit" directory="tests.bundles" outputFile="./junitResults.xml"'
+											sh 'ls'
+											junit 'junitResults.xml'
+										}
+									}
+									stage('Deploy') {
+										steps {
+											echo 'Deploying'
+										}
+									}
+								}
+							}
+						</code>
+					</pre>
+				</section>
 			</div><!-- End of slides -->
 		</div>
 
