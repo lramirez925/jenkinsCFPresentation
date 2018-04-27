@@ -29,6 +29,7 @@
 					<textarea data-template>
 						# Automate your tests
 						### By Lonnie Ramirez
+						### Repo: https://github.com/lramirez925/jenkinsCFPresentation
 					</textarea>
 				</section>
 				<section>
@@ -40,7 +41,7 @@
 				<section>
 						<div class='left'>
 							<p data-markdown>![alt_text](img/profile.jpg)</p>
-							
+						
 						</div>
 						<div class='right' >
 							<p data-markdown>
@@ -57,8 +58,11 @@
 						
 					
 				</section>
+				<section>
+					<img data-src="img/destroy.jpg" class="stretch">
+				</section>
 				<section data-markdown>
-					<textarea data-template >
+					<textarea data-template>
 						### Some useful commands
 							1. install testbox
 								- This installs testbox to your app adding the entry to the box.json
@@ -66,28 +70,25 @@
 								- Installs your config.... depending on your docker setup may not be needed
 							1. server start port=8080
 								- runs your server using default server.json and uses this port. 
-							
 					</textarea>
 				</section>
-					<section data-markdown>
-						<textarea data-template>
-							### Some useful commands
-							1. testbox run 
-								- Runs the default url set in the box.json
-								- parameters
-									- runner="http://localhost:8080/tests/runner.cfm" 
-										- The url to your runner. This is why we set the port ourselves. 
-									- reporter="JUnit" 
-										- Reporter type. Using JUnit because jenkins can use it by default
-									- directory="tests.bundles" 
-										- Directory where your rests are. 
-									- outputFile="./junitResults.xml"'
-										- File to output the test results to be archived. 
-						</textarea>
-					</section>
-				<section>
-					<img data-src="img/destroy.jpg" class="stretch">
+				<section data-markdown>
+					<textarea data-template>
+						### Some useful commands
+						1. testbox run 
+							- Runs the default url set in the box.json
+							- parameters
+								- runner="http://localhost:8080/tests/runner.cfm" 
+									- The url to your runner. This is why we set the port ourselves. 
+								- reporter="JUnit" 
+									- Reporter type. Using JUnit because jenkins can use it by default
+								- directory="tests.bundles" 
+									- Directory where your rests are. 
+								- outputFile="./junitResults.xml"'
+									- File to output the test results to be archived. 
+					</textarea>
 				</section>
+
 				<section>
 					<h2>Jenkins</h2>
 					<blockquote>
@@ -126,6 +127,17 @@
 								- If you can't run via commandline get CommandBox 
 						</textarea>
 					</section>
+				</section>
+				<section>
+						<h2>Why use a pipeline file</h2>
+						<section data-markdown>
+							<textarea data-template>
+								- Steps for testing are in your repo. 
+								- If one branch adds a new testing method or step it won't break other branches. 
+								- Can work with almost any work flow. 
+								- For more advanced features you can program in groovy. 
+							</textarea>
+						</section>
 				</section>
 				<section >
 					<h2>Basic code.</h2>
@@ -266,6 +278,19 @@
 							}
 						</code>
 					</pre>
+				</section>
+				<section>
+					<div class='left'>
+						<p data-markdown>![alt_text](img/profit.jpg)</p>		
+					</div>
+					<div class='right' >
+						<p data-markdown>
+							### It is that simple 
+							* Twitter: epicureannerd
+							* Email: epicureannerd@gmail.com
+						</p>
+						
+					</div>
 				</section>
 			</div><!-- End of slides -->
 		</div>
