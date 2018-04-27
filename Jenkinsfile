@@ -34,7 +34,7 @@ pipeline {
   }
   post { // This always occurs even if something failed. 
     always {
-      archive "src/**/*"
+      archiveArtifacts "src/"
     }
   }
 }

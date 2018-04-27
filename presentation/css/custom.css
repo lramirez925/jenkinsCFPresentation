@@ -26,3 +26,30 @@ pre.smallerCode {
     z-index:-10;
     width:50%;
 }
+
+.multiCol {
+    display: table;
+    table-layout: fixed; 
+    width: 100%;
+    text-align: left;
+    
+}
+
+.col {
+    display: table-cell;
+    vertical-align: top;
+    width: 50%;
+    padding: 2% 0 2% 3%; 
+}
+
+.col:first-of-type {
+    padding-left: 0;
+}
+
+.multiCol .col ul {
+    font-size: 75%;
+}
+
+.right ul {
+    font-size: .75em;
+}

@@ -48,6 +48,8 @@
 								* From Johnstown, PA (Yes we flooded ourselves 3 times).
 								* Avid adventurer into Scifi and Anime conventions. 
 								* I constantly break everything so I am always looking for new ways to find where I broke it. 
+								* Twitter: epicureannerd
+								* Email: epicureannerd@gmail.com
 							</p>
 							
 						</div>
@@ -76,51 +78,49 @@
 					</section>
 				</section>
 				<section >
+					<h2>Basic code.</h2>
 					<pre class="smallerCode">
 						<code class="hljs" data-trim contenteditable >
 						pipeline { // Top level required.
 							agent { // Specifies where the the pipeline will execute.
 								docker { // Execute the pipeline within a docker image
-								image 'ortussolutions/commandbox' // Image for docker 
-								args '-u=root'
+									image 'ortussolutions/commandbox' // Image for docker 
+									args '-u=root'
 								}
 							
 							}
 							stages { // Bulk of the work happens here. Is made up of multiple stage children. Does them in order
 								stage('Build') { //Different steps in the stages section
-								steps { //Here is the actions that occur in the stage
-									echo 'In Build Script. ' //simply output the string
-									sh 'ls' // Perform command line actions.
-									sh 'box server start port=8080'
-									sh 'box cfconfig import myConfig.json'
-									sh 'box cfconfig import testConfig.json'
-									sh 'box install'
-									sh 'box server restart'
+									steps { //Here is the actions that occur in the stage
+										echo 'In Build Script. ' //simply output the string
+										sh 'ls' // Perform command line actions.
+										sh 'box server start port=8080'
+										sh 'box cfconfig import myConfig.json'
+										sh 'box cfconfig import testConfig.json'
+										sh 'box install'
+										sh 'box server restart'
+									}
 								}
-							}
 								stage('Unit Tests') { //Testing stage. This does not run if previous stages have failed.
-								steps {
-									echo 'Running Unit Tests'
-									sh 'box testbox run runner="http://localhost:8080/tests/runner.cfm" reporter="JUnit" directory="tests.bundles" outputFile="./junitResults.xml"'
-									sh 'ls'
-									junit 'junitResults.xml'
-								}
+									steps {
+										echo 'Running Unit Tests'
+										sh 'box testbox run runner="http://localhost:8080/tests/runner.cfm" reporter="JUnit" directory="tests.bundles" outputFile="./junitResults.xml"'
+										sh 'ls'
+										junit 'junitResults.xml'
+									}
 								}
 								stage('Deploy') {
 									steps {
-									echo 'Deploying'
+										echo 'Deploying'
 									}
 								}
 							}
 							post { // This always occurs even if something failed. 
 								always {
-									archive "src/**/*"
-									junit 'junitResults.xml'
+									archiveArtifacts "src/**/*"
 								}
 							}
 						}
-
-							
 						</code>
 					</pre>
 				</section>
